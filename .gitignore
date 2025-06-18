@@ -1,0 +1,6 @@
+.venv/
+nodemodules/
+
+.env
+techStack.txt
+todo.txt
