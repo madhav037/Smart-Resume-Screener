@@ -4,3 +4,5 @@ nodemodules/
 .env
 techStack.txt
 todo.txt
+
+__pycache__/
