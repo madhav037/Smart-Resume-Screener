@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
-from app.db import Base
+from app.db.db import Base
 
 class JobDescription(Base):
     __tablename__ = "job_descriptions"

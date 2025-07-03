@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from datetime import datetime, timezone
-from app.db import Base
+from app.db.db import Base
 
 class JobApplicationStatusHistory(Base):
     __tablename__ = "job_application_status_history"

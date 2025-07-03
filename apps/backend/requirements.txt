@@ -6,3 +6,4 @@ sqlalchemy
 python-multipart
 uvicorn
 alembic 
+email-validator
