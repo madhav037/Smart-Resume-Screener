@@ -3,7 +3,7 @@ from .user import router as user_router
 # from .resume import router as resume_router
 # from .company import router as company_router
 # from .application import router as application_router
-# from .auth import router as auth_router
+from .auth import router as auth_router
 
 __all__ = [
     "user_router",
@@ -11,5 +11,5 @@ __all__ = [
     # "resume_router",
     # "company_router",
     # "application_router",
-    # "auth_router",
+    "auth_router",
 ]

@@ -12,6 +12,12 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    
+class UserUpdate(UserBase):
+    password: Optional[str] = None
+    phone: Optional[str] = None
+    profile_picture: Optional[HttpUrl] = None
+    name: Optional[str] = None
 
 class UserOut(UserBase):
     id: int
@@ -19,3 +25,7 @@ class UserOut(UserBase):
 
     class Config:
         orm_mode = True
+        
+class UserPasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str

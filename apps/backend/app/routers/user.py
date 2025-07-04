@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas import UserCreate, UserOut
+from app.schemas import UserCreate, UserOut, UserUpdate
+from app.core.security import get_current_user
 from app.controller import user as crud
+from app.db.models import User
 from app.db.db import get_db
 
 router = APIRouter()
@@ -25,15 +27,27 @@ def get_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
     
 @router.put("/{user_id}", response_model=UserOut)
-def update_user(user_id: int, user: UserCreate, db: Session = Depends(get_db)):
-    updated = crud.update_user(db, user_id, user.dict(exclude_unset=True))
-    if not updated:
+def update_user(user_id: int, updated_user: UserUpdate, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: Cannot update another user's data")
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return updated
+
+    for field, value in updated_user.model_dump(exclude_unset=True).items():
+        setattr(user, field, value)
+
+    db.commit()
+    db.refresh(user)
+    return {"message": "User updated successfully", "user": user}
 
 
 @router.delete("/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, current_user = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: Cannot delete another user's data")
+
     deleted = crud.delete_user(db, user_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="User not found")
